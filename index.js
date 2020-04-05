@@ -31,6 +31,4 @@ express()
 		res.status(400);
 		res.sendFile(path.join(__dirname, "public/404.html"));
 	})
-	.listen(PORT, () => {
-		console.log(`Listening on ${PORT}`);
-	});
+	.listen(PORT);

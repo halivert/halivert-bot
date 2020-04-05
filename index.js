@@ -17,13 +17,20 @@ bot.command("oldschool", ctx => ctx.reply("Hello"));
 bot.command("modern", ({ reply }) => reply("Yo"));
 bot.command("hipster", Telegraf.reply("λ"));
 
-express()
-	.use(express.static(path.join(__dirname, "public")))
-	.use(function(req, res) {
-		res.status(404);
-		res.sendFile(path.join(__dirname, "public/404.html"));
-	})
-	.listen(PORT);
+const unless = function(middleware, ...paths) {
+	return function(req, res, next) {
+		const pathCheck = paths.some(path => path === req.path);
+		pathCheck ? next() : middleware(req, res, next);
+	};
+};
+
+// express()
+// 	// .use('/', express.static(path.join(__dirname, "public")))
+// 	// .use(function(req, res) {
+// 	// 	res.status(404);
+// 	// 	res.sendFile(path.join(__dirname, "public/404.html"));
+// 	// })
+// 	.listen(PORT);
 
 bot.launch({
 	webhook: {

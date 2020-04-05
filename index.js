@@ -27,8 +27,4 @@ bot.launch({
 express()
 	.use(express.static(path.join(__dirname, "public")))
 	.set("views", path.join(__dirname, "views"))
-	.use(function(req, res) {
-		res.status(400);
-		res.sendFile(path.join(__dirname, "public/404.html"));
-	})
 	.listen(PORT);

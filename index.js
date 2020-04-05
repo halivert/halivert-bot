@@ -17,6 +17,27 @@ bot.command("oldschool", ctx => ctx.reply("Hello"));
 bot.command("modern", ({ reply }) => reply("Yo"));
 bot.command("hipster", Telegraf.reply("λ"));
 
+const unless = function(path, middleware) {
+	return function(req, res, next) {
+		if (path === req.path) {
+			return next();
+		} else {
+			return middleware(req, res, next);
+		}
+	};
+};
+
+express()
+	.use(express.static(path.join(__dirname, "public")))
+	.set("views", path.join(__dirname, "views"))
+	.use(
+		unless("/", function(req, res) {
+			res.status(404);
+			res.sendFile(path.join(__dirname, "public/404.html"));
+		})
+	)
+	.listen(PORT);
+
 bot.launch({
 	webhook: {
 		domain: URL,
@@ -24,7 +45,3 @@ bot.launch({
 	}
 });
 
-express()
-	.use(express.static(path.join(__dirname, "public")))
-	.set("views", path.join(__dirname, "views"))
-	.listen(PORT);

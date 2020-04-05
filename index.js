@@ -27,16 +27,9 @@ const unless = function(path, middleware) {
 	};
 };
 
-express()
-	.use(express.static(path.join(__dirname, "public")))
-	.set("views", path.join(__dirname, "views"))
-	.use(
-		unless("/", function(req, res) {
-			res.status(404);
-			res.sendFile(path.join(__dirname, "public/404.html"));
-		})
-	)
-	.listen(PORT);
+// express()
+// 	.use(express.static(path.join(__dirname, "public")))
+// 	.listen(PORT);
 
 bot.launch({
 	webhook: {

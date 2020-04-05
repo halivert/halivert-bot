@@ -5,7 +5,7 @@ const path = require("path");
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const PORT = process.env.PORT || 5000;
 const BOT_PORT = process.env.BOT_PORT || 3000;
-const URL = process.env.URL || "http://halivert-bot.herokuapp.com";
+const URL = process.env.URL || "https://halivert-bot.herokuapp.com";
 
 const bot = new Telegraf(BOT_TOKEN);
 bot.start(ctx => ctx.reply("Welcome"));
@@ -19,7 +19,7 @@ bot.command("hipster", Telegraf.reply("λ"));
 
 bot.launch({
 	webhook: {
-		domain: `${URL}/${BOT_TOKEN}`,
+		domain: URL,
 		port: BOT_PORT
 	}
 });

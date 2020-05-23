@@ -1,6 +1,7 @@
 {
   "dependencies": {
     "express": "^4.17.1",
-    "telegraf": "^3.37.0"
+    "telegraf": "^3.37.0",
+    "url-parse": "^1.4.7"
   }
 }

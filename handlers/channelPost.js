@@ -26,7 +26,7 @@ module.exports = bot => {
 			messageId,
 			null,
 			Markup.inlineKeyboard([
-				Markup.loginButton("Comments", buttonUrl)
+				Markup.loginButton("Comments", buttonUrl, true)
 			])
 		);
 			// reply_markup: Extra.markup(m => {

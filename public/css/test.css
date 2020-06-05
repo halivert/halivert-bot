@@ -1,0 +1,29 @@
+.columns {
+	display: flex;
+}
+
+.columns:not(first-child) {
+	margin-top: 1rem;
+}
+
+.columns > * {
+	flex: 1;
+}
+
+.columns > :not(:last-child) {
+	margin-right: 1rem;
+}
+
+.is-hidden {
+	display: none !important;
+}
+
+ul > li:not(:last-child) {
+	margin-bottom: 0.25rem;
+}
+
+.notification {
+	position: fixed;
+	bottom: 2rem;
+	right: 5rem;
+}

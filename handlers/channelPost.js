@@ -21,18 +21,16 @@ module.exports = bot => {
 
 		const buttonUrl = url.query.url + "#comments";
 
+		const keyboard = Markup.inlineKeyboard([
+			Markup.loginButton("Comments", buttonUrl)
+		]);
+
 		ctx.telegram.editMessageReplyMarkup(
 			chatId,
 			messageId,
 			null,
-			Markup.inlineKeyboard([
-				Markup.loginButton("Comments", buttonUrl, true)
-			])
+			keyboard
 		);
-			// reply_markup: Extra.markup(m => {
-			// 	m.inlineKeyboard([m.urlButton("Comments", buttonUrl)]);
-			// })
-		// });
 
 		// if (ctx.channelPost.text.toLowerCase() === `@${ctx.me}`.toLowerCase()) {
 		// 	const { title, username } = ctx.chat;

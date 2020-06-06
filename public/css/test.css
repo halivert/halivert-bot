@@ -1,29 +1,87 @@
-.columns {
-	display: flex;
-}
-
-.columns:not(first-child) {
-	margin-top: 1rem;
-}
-
-.columns > * {
-	flex: 1;
-}
-
-.columns > :not(:last-child) {
-	margin-right: 1rem;
-}
-
 .is-hidden {
 	display: none !important;
 }
 
-ul > li:not(:last-child) {
-	margin-bottom: 0.25rem;
+.nes-container {
+	overflow-x: auto;
 }
 
-.notification {
+.notifications > p {
 	position: fixed;
 	bottom: 2rem;
 	right: 5rem;
+	display: flex;
+	flex-flow: column;
+	z-index: 100;
+}
+
+.notification {
+	display: block;
+	transition: opacity 2s;
+	margin-top: 1rem;
+}
+
+.list-leave-to {
+	opacity: 0;
+}
+
+.columns {
+	margin: 0;
+	padding: 0;
+	display: flex;
+}
+
+.columns:not(:last-child) {
+	margin-bottom: 0.75rem;
+}
+
+.columns.wrap {
+	-webkit-flex-wrap: wrap;
+	flex-wrap: wrap;
+}
+
+.columns > * {
+	flex: 1;
+	align-items: center;
+	margin-bottom: 0.75rem;
+}
+
+.columns > :not(:last-child) {
+	margin-right: 0.75rem;
+}
+
+@media only screen and (max-width: 768px) {
+	.columns {
+		flex-flow: column;
+	}
+
+	.columns > :not(:last-child) {
+		margin-right: 0;
+	}
+
+	.notifications > p {
+		position: fixed;
+		bottom: 1rem;
+		right: 0.5rem;
+		display: flex;
+		flex-flow: column;
+		z-index: 100;
+	}
+}
+
+.columns > .is-3 {
+	flex: 1 25%;
+}
+
+.columns > .is-one-fifth {
+	flex: 1 20%;
+}
+
+.columns > .is-half {
+	flex: 1 50%;
+	margin: 0.75rem 0 0 0;
+}
+
+.is-fullwidth {
+	width: 100%;
 }

@@ -19,10 +19,12 @@
 		<div class="nes-container with-title" id="el">
 			<p class="title">Generador de números para constancias</p>
 
-			<div>
-				<div class="nes-field">
-					<label for="name">Nombre del curso</label>
-					<input class="nes-input" type="text" v-model="name" id="name" />
+			<div class="body">
+				<div class="columns">
+					<div class="nes-field">
+						<label for="name">Nombre del curso</label>
+						<input class="nes-input" type="text" v-model="name" id="name" />
+					</div>
 				</div>
 
 				<div class="columns">
@@ -42,23 +44,33 @@
 					</div>
 				</div>
 
-				<template v-for="notification in notifications">
-					<div
-						class="notification nes-balloon is-dark from-right"
-						:key="notification.key"
-					>
-						<p>Copiado!</p>
-					</div>
-				</template>
+				<div class="notifications">
+					<template>
+						<transition-group name="list" tag="p">
+							<div
+								v-for="(notification, idx) in notifications"
+								class="notification nes-balloon is-dark from-right"
+								:key="notification.element"
+							>
+								<p>{{ notification.text }}</p>
+								<p>{{ notification.element }}</p>
+							</div>
+						</transition-group>
+					</template>
+				</div>
 
-				<div class="columns">
-					<ul class="nes-list is-circle">
-						<template v-for="(element, idx) in elements">
-							<li :data-clipboard-text="element" :key="idx">
+				<div class="columns wrap">
+					<template v-for="(element, idx) in elements">
+						<div class="is-half">
+							<button
+								class="nes-btn copyable is-one-third is-fullwidth"
+								:data-clipboard-text="element"
+								:key="idx"
+							>
 								{{ element }}
-							</li>
-						</template>
-					</ul>
+							</button>
+						</div>
+					</template>
 				</div>
 			</div>
 		</div>

@@ -16,6 +16,14 @@ new Vue({
 			e.trigger.classList.add("is-success");
 		});
 	},
+	watch: {
+		name() {
+			this.deactivateButtons();
+		},
+		date() {
+			this.deactivateButtons();
+		}
+	},
 	computed: {
 		elements() {
 			let result = [];
@@ -29,7 +37,15 @@ new Vue({
 				let num = i.toString().padStart(4, "0");
 				result.push(`${firstPart}${secondPart}${num}`);
 			}
+
 			return result;
+		}
+	},
+	methods: {
+		deactivateButtons() {
+			document.querySelectorAll(".copyable").forEach(b => {
+				b.classList.remove("is-success");
+			});
 		}
 	}
 });

@@ -2,47 +2,36 @@ const Markup = require("telegraf/markup");
 const Extra = require("telegraf/extra");
 const URL = require("url-parse");
 
+const convertUrl = url => {
+	const newUrl = new URL(url, true);
+
+	if (!newUrl) return undefined;
+
+	return `https://t.me/iv?url=${encodeURI(newUrl)}&rhash=ff503d2109b312`;
+};
+
 module.exports = bot => {
-	bot.on("channel_post", async ctx => {
-		var url;
+	bot.on("channel_post", ctx => {
+		let url;
 		const channelPost = ctx.channelPost;
 		const chatId = channelPost.chat.id;
 		const messageId = channelPost.message_id;
-		if (channelPost.entities && channelPost.entities.length === 1) {
-			const entity = channelPost.entities[0];
-			if (entity.type === "url") {
-				url = new URL(ctx.channelPost.text, true);
-			}
+		let resultMessage = undefined;
+		if (channelPost.entities) {
+			resultMessage = channelPost.entities.reduce((resultMessage, entity) => {
+				if (entity.type === "url") {
+					let start = entity.offset;
+					let end = entity.offset + entity.length;
+					url = new URL(channelPost.text.substring(start, end), true);
+					if (!url) return resultMessage;
+					if (url.hostname !== "halivert.dev") return resultMessage;
+
+					return resultMessage.replace(url.href, convertUrl(url.href));
+				}
+			}, channelPost.text);
 		}
 
-		if (!url) return;
-		if (url.hostname !== "t.me") return;
-		if (url.pathname !== "/iv") return;
-
-		const buttonUrl = url.query.url + "#comments";
-
-		const keyboard = Markup.inlineKeyboard([
-			Markup.loginButton("Comments", buttonUrl)
-		]);
-
-		ctx.telegram.editMessageReplyMarkup(
-			chatId,
-			messageId,
-			null,
-			keyboard
-		);
-
-		// if (ctx.channelPost.text.toLowerCase() === `@${ctx.me}`.toLowerCase()) {
-		// 	const { title, username } = ctx.chat;
-
-		// 	const reply = await ctx.reply(
-		// 		`Success. This message will automatically be deleted in 5 seconds.`
-		// 	);
-		// 	ctx.deleteMessage();
-
-		// 	setTimeout(() => {
-		// 		ctx.deleteMessage(reply.message_id);
-		// 	}, 5000);
-		// }
+		if (resultMessage && resultMessage !== channelPost.text)
+			ctx.telegram.editMessageText(chatId, messageId, null, resultMessage);
 	});
 };

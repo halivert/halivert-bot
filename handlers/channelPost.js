@@ -7,7 +7,9 @@ const convertUrl = url => {
 
 	if (!newUrl) return undefined;
 
-	return `https://t.me/iv?url=${encodeURI(newUrl)}&rhash=ff503d2109b312`;
+	return `https://t.me/iv?url=${encodeURIComponent(
+		newUrl
+	)}&rhash=ff503d2109b312`;
 };
 
 module.exports = bot => {

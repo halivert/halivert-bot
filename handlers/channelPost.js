@@ -2,7 +2,7 @@ const Markup = require("telegraf/markup");
 const Extra = require("telegraf/extra");
 const URL = require("url-parse");
 
-const convertUrl = url => {
+const convertUrl = (url) => {
 	const newUrl = new URL(url, true);
 
 	if (!newUrl) return undefined;
@@ -12,8 +12,8 @@ const convertUrl = url => {
 	)}&rhash=ff503d2109b312`;
 };
 
-module.exports = bot => {
-	bot.on("channel_post", ctx => {
+module.exports = (bot) => {
+	bot.on("channel_post", (ctx) => {
 		let url;
 		const channelPost = ctx.channelPost;
 		const chatId = channelPost.chat.id;

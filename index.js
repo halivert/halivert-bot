@@ -19,35 +19,35 @@ const stages = ["halivertlink"];
 const bot = new Telegraf(BOT_TOKEN);
 
 const stage = new Stage();
-stage.command("cancel", ctx => {
+stage.command("cancel", (ctx) => {
 	leave();
 	if (ctx.session.stage) {
 		ctx.session.stage = undefined;
 		return ctx.reply(
 			"¡Cancelado!",
-			Extra.markup(m => m.removeKeyboard())
+			Extra.markup((m) => m.removeKeyboard())
 		);
 	}
 
 	return ctx.reply(
 		"No estaba haciendo nada...",
-		Extra.markup(m => m.removeKeyboard())
+		Extra.markup((m) => m.removeKeyboard())
 	);
 });
 
 bot.use(session());
 bot.use(stage.middleware());
 
-stages.forEach(stageName => {
+stages.forEach((stageName) => {
 	stage.register(require(`./stages/${stageName}`));
-	bot.command(stageName, ctx => ctx.scene.enter(stageName));
+	bot.command(stageName, (ctx) => ctx.scene.enter(stageName));
 });
 
-bot.on("sticker", ctx => ctx.reply("👍🏽"));
+bot.on("sticker", (ctx) => ctx.reply("👍🏽"));
 
-handlers.forEach(handler => require(`./handlers/${handler}`)(bot));
+handlers.forEach((handler) => require(`./handlers/${handler}`)(bot));
 
-commands.forEach(command =>
+commands.forEach((command) =>
 	bot.command(command, require(`./commands/${command}`))
 );
 

@@ -5,14 +5,14 @@ const Scene = require("telegraf/scenes/base");
 const sceneName = "halivertlink";
 
 const scene = new Scene(sceneName);
-scene.enter(ctx => {
+scene.enter((ctx) => {
 	ctx.session.stage = sceneName;
 	ctx.reply("Envíame la url");
 });
 
-scene.command("cancel", ctx => ctx.scene.leave());
+scene.command("cancel", (ctx) => ctx.scene.leave());
 
-scene.on("text", ctx => {
+scene.on("text", (ctx) => {
 	let url;
 	const userMessage = ctx.message;
 	if (userMessage.entities && userMessage.entities.length === 1) {

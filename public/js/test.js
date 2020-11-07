@@ -4,11 +4,11 @@ new Vue({
 		name: "",
 		date: "",
 		number: 100,
-		notifications: []
+		notifications: [],
 	},
 	created() {
 		let clipboard = new ClipboardJS(".copyable");
-		clipboard.on("success", e => {
+		clipboard.on("success", (e) => {
 			this.notifications.push({ text: "¡Copiado!", element: e.text });
 			window.setTimeout(() => {
 				this.notifications.splice(0, 1);
@@ -22,7 +22,7 @@ new Vue({
 		},
 		date() {
 			this.deactivateButtons();
-		}
+		},
 	},
 	computed: {
 		elements() {
@@ -39,13 +39,13 @@ new Vue({
 			}
 
 			return result;
-		}
+		},
 	},
 	methods: {
 		deactivateButtons() {
-			document.querySelectorAll(".copyable").forEach(b => {
+			document.querySelectorAll(".copyable").forEach((b) => {
 				b.classList.remove("is-success");
 			});
-		}
-	}
+		},
+	},
 });

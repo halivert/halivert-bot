@@ -1,16 +1,14 @@
-const Markup = require("telegraf/markup");
 const URL = require("url-parse");
-const Scene = require("telegraf/scenes/base");
+
+const { BaseScene } = require("telegraf");
 
 const sceneName = "halivertlink";
 
-const scene = new Scene(sceneName);
+const scene = new BaseScene(sceneName);
 scene.enter((ctx) => {
 	ctx.session.stage = sceneName;
 	ctx.reply("Envíame la url");
 });
-
-scene.command("cancel", (ctx) => ctx.scene.leave());
 
 scene.on("text", (ctx) => {
 	let url;

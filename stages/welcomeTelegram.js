@@ -50,7 +50,7 @@ const steps = [
 		await ctx.reply(
 			"Ahí donde está el micrófono para las notas de voz toca una vez"
 		);
-		// await delay(3000);
+		await delay(3000);
 		await ctx.reply("¿Ya? cambió a una cámara, ¿verdad?");
 		await ctx.reply("Ahora envíame un videomensaje por favor 🙏🏽");
 
@@ -123,8 +123,8 @@ const bye = async (ctx) => {
 		"Y hasta aquí llega esto\n" +
 			"Seguiré agregando pasos, si vuelves recuerda que vas en el paso " +
 			`${ctx.session.step}.\n\n` +
-			"Puedes enviarme sugerencias y decirme si algo " +
-			"salió mal a @halivert, gracias por platicar"
+			"Puedes enviarme sugerencias a @halivert y también decirme si algo " +
+			"salió mal. Gracias por platicar"
 	);
 
 	ctx.reply("👋🏽");

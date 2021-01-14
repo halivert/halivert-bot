@@ -18,11 +18,7 @@ const stage = new Stage();
 stage.command("cancel", (ctx) => {
 	if (ctx.session.stage) {
 		ctx.session.stage = undefined;
-		ctx.scene.leave();
-		return ctx.reply(
-			"¡Cancelado!",
-			Extra.markup((m) => m.removeKeyboard())
-		);
+		return ctx.scene.leave();
 	}
 
 	return ctx.reply(

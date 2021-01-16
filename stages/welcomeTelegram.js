@@ -7,7 +7,7 @@ const scene = new BaseScene(sceneName);
 
 const typing = async (ctx, ms) => {
 	await ctx.replyWithChatAction("typing");
-	await delay(ms || 1500);
+	await delay(ms || 1250);
 };
 
 const steps = [
@@ -26,13 +26,13 @@ const steps = [
 				"con este, existen muchos de ellos"
 		);
 
-		await ctx.reply("Agregalos y envíame uno, anda...");
+		ctx.reply("Agregalos y envíame uno, anda...");
 
 		ctx.session.step = 1;
 	},
 	// Paso 1
 	async (ctx) => {
-		await ctx.reply(
+		ctx.reply(
 			"¿Estás en pc o móvil?",
 			Extra.markup((m) =>
 				m.inlineKeyboard([
@@ -50,9 +50,10 @@ const steps = [
 		await ctx.reply(
 			"Ahí donde está el micrófono para las notas de voz toca una vez"
 		);
-		await delay(3000);
+
+		await typing(ctx, 3000);
 		await ctx.reply("¿Ya? cambió a una cámara, ¿verdad?");
-		await ctx.reply("Ahora envíame un videomensaje por favor 🙏🏽");
+		ctx.reply("Ahora envíame un videomensaje por favor 🙏🏽");
 
 		ctx.session.step = 3;
 	},
@@ -60,7 +61,7 @@ const steps = [
 	async (ctx) => {
 		await ctx.reply("¿Sabías que puedes *editar mensajes*?", Extra.markdown());
 
-		await ctx.reply("Mira, escribe algo...");
+		ctx.reply("Mira, escribe algo...");
 
 		ctx.session.step = 4;
 	},
@@ -72,7 +73,7 @@ const steps = [
 					"en el siguiente paso..."
 			);
 
-			return await steps[5](ctx);
+			return steps[5](ctx);
 		}
 
 		await ctx.reply(
@@ -81,7 +82,7 @@ const steps = [
 			Extra.markdown()
 		);
 
-		await ctx.reply(
+		ctx.reply(
 			"En ajustes aparece la opción de nombre de usuario, ve a ponerlo ;) y " +
 				"cuando vuelvas escribe /listo"
 		);
@@ -90,7 +91,7 @@ const steps = [
 	},
 	// Paso 5
 	async (ctx) => {
-		await ctx.reply(
+		ctx.reply(
 			"*Fijar mensajes*\n" +
 				`Esta función sirve para tener los mensajes más importantes hasta ` +
 				`arriba. Mira ${ctx.session.action} en un mensaje y selecciona ` +
@@ -99,6 +100,48 @@ const steps = [
 		);
 
 		ctx.session.step = 6;
+	},
+	// Step 6
+	async (ctx) => {
+		await ctx.reply(
+			"También puedes *eliminar mensajes* " +
+				"Y no aparecerá un molesto: _Este mensaje ha sido eliminado_ " +
+				"¿Quién haría algo así de horrible?... 🙄",
+			Extra.markdown()
+		);
+
+		await typing(ctx);
+		ctx.reply(
+			`Inténtalo, ${ctx.session.action} en un mensaje y selecciona eliminar ` +
+				"mensaje _(Cuando estés en un chat con una persona real, tendrás que " +
+				"marcar la casilla para eliminar el mensaje también para esa persona)_",
+			Extra.markdown().markup((m) =>
+				m.inlineKeyboard([m.callbackButton("Listo", "onStep6")])
+			)
+		);
+
+		ctx.session.step = 7;
+	},
+	// Paso 7
+	async (ctx) => {
+		await ctx.reply(
+			"*Programar mensajes* y *Enviar en silencio*",
+			Extra.markdown()
+		);
+
+		let action =
+			ctx.session.device === "mobile"
+				? "mantén presionado"
+				: "da click secundario en";
+
+		await typing(ctx);
+		ctx.reply(
+			`Escribe algo y no lo envíes aún, cuando termines ${action} el botón ` +
+				"de enviar y saldrán estas dos opciones; vamos, programa un mensaje " +
+				"y envía otro en silencio en este chat"
+		);
+
+		ctx.session.step = 8;
 	},
 ];
 
@@ -110,19 +153,19 @@ scene.enter(async (ctx) => {
 
 	await steps[0](ctx);
 
-	await typing(ctx);
 	await ctx.reply(
-		"_O... Si ya has avanzado, escribe /step y el paso en el que vas_",
+		"_O... Si ya has avanzado, escribe /step y el paso en el que vas e.g._",
 		Extra.markdown()
 	);
+
+	ctx.reply("/step 4");
 });
 
 const bye = async (ctx) => {
-	await typing(ctx, 2000);
+	await typing(ctx);
 	await ctx.reply(
 		"Y hasta aquí llega esto\n" +
-			"Seguiré agregando pasos, si vuelves recuerda que vas en el paso " +
-			`${ctx.session.step}.\n\n` +
+			`${ctx.session.step} pasos para iniciar en Telegram\n` +
 			"Puedes enviarme sugerencias a @halivert y también decirme si algo " +
 			"salió mal. Gracias por platicar"
 	);
@@ -170,6 +213,19 @@ scene.action("pcNext", async (ctx) => {
 		}
 
 		if (ctx.session.step < steps.length) await steps[ctx.session.step](ctx);
+	}
+});
+
+scene.action("onStep6", async (ctx) => {
+	ctx.answerCbQuery();
+
+	if (ctx.session.step === 7) {
+		await ctx.reply(
+			"Vale vale, ahora hay otras dos cosas que pueden modificar " +
+				"los mensajes que envías"
+		);
+
+		await steps[7](ctx);
 	}
 });
 
@@ -239,25 +295,26 @@ scene.on("pinned_message", async (ctx) => {
 
 	await ctx.reply("Excelente 😌");
 
-	await bye(ctx);
+	return await steps[6](ctx);
 });
 
 scene.command("step", async (ctx) => {
+	ctx.session.device = undefined;
+	ctx.session.step = 0;
+
 	if (ctx.message && ctx.message.text) {
 		let second = ctx.message.text.split(" ")[1];
 		let secondNumber = parseInt(second, 10);
 
 		if (isNaN(secondNumber)) {
-			return await ctx.reply(
-				`¿Te parece que \`${second}\` es un número? 😠`,
+			return ctx.reply(
+				`¿Te parece que \`${second || ""}\` es un número? 😠`,
 				Extra.markdown()
 			);
 		}
 
-		if (secondNumber > steps.length) {
-			return await ctx.reply(
-				"Espera un momento... ¿enserio ese paso existe? 🧐"
-			);
+		if (secondNumber >= steps.length) {
+			return ctx.reply("Espera un momento... ¿enserio ese paso existe? 🧐");
 		}
 
 		ctx.session.step = secondNumber;
@@ -293,17 +350,28 @@ scene.on("message", async (ctx) => {
 		);
 
 		await typing(ctx);
-		return await ctx.reply(
+		return ctx.reply(
 			"Aparecerá un menú y una de las opciones es *editar*\nAhora edita el " +
 				"mensaje",
 			Extra.markdown()
 		);
 	}
 
+	if (ctx.session.step === 8) {
+		await ctx.reply(
+			"Voy a suponer que lo enviaste en silencio (no lo puedo saber 🤨) así " +
+				"que, ¡qué bien!"
+		);
+
+		return bye(ctx);
+	}
+
 	if (!ctx.from.is_bot) {
-		return ctx.reply(
+		await ctx.reply(
 			"Voy a ignorar todo lo que digas :v continúa con el tutorial..."
 		);
+
+		await steps[ctx.session.step - 1](ctx);
 	}
 });
 
@@ -312,14 +380,14 @@ scene.leave(async (ctx) => {
 
 	ctx.session = {};
 
-	if (step === steps.length) return;
-
-	if (step > 1) {
-		await ctx.reply(
-			"Vale, vale, pero recuerda que vas en el paso: " + (step - 1)
-		);
-	} else {
-		await ctx.reply("Cancelado");
+	if (step !== steps.length) {
+		if (step > 1) {
+			await ctx.reply(
+				"Vale, vale, pero recuerda que vas en el paso: " + (step - 1)
+			);
+		} else {
+			await ctx.reply("Cancelado");
+		}
 	}
 
 	ctx.reply("👋🏽");

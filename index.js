@@ -50,9 +50,6 @@ bot.command("start", (ctx) => ctx.scene.enter("welcomeTelegram"));
 bot.on("message", (ctx) => {
 	if (ctx.message.text && ctx.message.text.toLowerCase() === "hola") {
 		ctx.scene.enter("welcomeTelegram");
-
-		let user = `@${ctx.from.username}` || ctx.from.first_name;
-		ctx.telegram.sendMessage(process.env.ADMIN_ID, `Me habla ${user}`);
 	}
 });
 

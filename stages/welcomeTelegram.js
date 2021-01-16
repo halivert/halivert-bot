@@ -170,7 +170,14 @@ const bye = async (ctx) => {
 			"salió mal. Gracias por platicar"
 	);
 
-	ctx.reply("👋🏽");
+	await ctx.reply("👋🏽");
+
+	let channel =
+		ctx.session.device === "mobile"
+			? "https://t.me/AndroidThemes"
+			: "https://t.me/themes";
+
+	ctx.reply(`P.D. checa este canal de temas ${channel}`);
 
 	return ctx.scene.leave();
 };
@@ -388,9 +395,9 @@ scene.leave(async (ctx) => {
 		} else {
 			await ctx.reply("Cancelado");
 		}
-	}
 
-	ctx.reply("👋🏽");
+		ctx.reply("👋🏽");
+	}
 });
 
 module.exports = scene;

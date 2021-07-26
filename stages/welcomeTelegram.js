@@ -146,9 +146,6 @@ const steps = [
 ];
 
 scene.enter(async (ctx) => {
-	let user = ctx.from.username ? `@${ctx.from.username}` : ctx.from.first_name;
-	ctx.telegram.sendMessage(process.env.ADMIN_ID, `Me habla ${user}`);
-
 	ctx.session.stage = sceneName;
 	ctx.session.step = 0;
 

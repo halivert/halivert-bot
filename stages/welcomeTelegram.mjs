@@ -1,5 +1,5 @@
 import Telegraf from "telegraf";
-import { delay } from "../resources/helpers.js";
+import { delay } from "../resources/helpers.mjs";
 const { BaseScene, Extra } = Telegraf;
 
 const sceneName = "welcomeTelegram";
@@ -379,7 +379,7 @@ scene.on("message", async (ctx) => {
 			"Voy a ignorar todo lo que digas :v continúa con el tutorial..."
 		);
 
-		await steps[ctx.session.step - 1](ctx);
+		await steps[ctx.session.step - 1]?.(ctx);
 	}
 });
 

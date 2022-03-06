@@ -1,16 +1,19 @@
-require("dotenv").config();
+import dotenv from "dotenv";
 
-const Telegraf = require("telegraf");
-const express = require("express");
-const path = require("path");
+import Telegraf from "telegraf";
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
 
 const { Extra, session, Stage } = Telegraf;
+
+dotenv.config();
 
 const BOT_TOKEN = process.env.BOT_TOKEN;
 const PORT = process.env.PORT || 3000;
 const URL = process.env.URL || "https://halivert-bot.herokuapp.com";
 
-const handlers = ["channelPost.js"];
+const handlers = ["channelPost.mjs"];
 const commands = [];
 const stages = ["halivertlink.mjs"];
 
@@ -66,6 +69,8 @@ else {
 	bot.telegram.setWebhook(`${URL}/bot${BOT_TOKEN}`);
 	app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
 }
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 app
 	.use(express.static(path.join(__dirname, "public")))

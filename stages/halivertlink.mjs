@@ -1,6 +1,6 @@
-const URL = require("url-parse");
-
-const { BaseScene } = require("telegraf");
+import URL from "url-parse";
+import Telegraf from "telegraf";
+const { BaseScene } = Telegraf;
 
 const sceneName = "halivertlink";
 
@@ -29,4 +29,4 @@ scene.on("text", (ctx) => {
 	return ctx.scene.leave();
 });
 
-module.exports = scene;
+export default scene;

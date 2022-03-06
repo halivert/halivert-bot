@@ -1,7 +1,7 @@
 {
 	"license": "MIT",
 	"scripts": {
-		"start": "node index.js",
+		"start": "node index.mjs",
 		"css-build": "sass --no-source-map resources/sass/main.scss public/css/main.css --style compressed"
 	},
 	"dependencies": {

@@ -10,9 +10,9 @@ const BOT_TOKEN = process.env.BOT_TOKEN;
 const PORT = process.env.PORT || 3000;
 const URL = process.env.URL || "https://halivert-bot.herokuapp.com";
 
-const handlers = ["channelPost"];
+const handlers = ["channelPost.js"];
 const commands = [];
-const stages = ["halivertlink"];
+const stages = ["halivertlink.mjs"];
 
 const bot = new Telegraf(BOT_TOKEN);
 
@@ -32,19 +32,23 @@ stage.command("cancel", (ctx) => {
 bot.use(session());
 bot.use(stage.middleware());
 
-stages.forEach((stageName) => {
-	stage.register(require(`./stages/${stageName}`));
+stages.forEach(async (stageName) => {
+	stage.register((await import(`./stages/${stageName}`)).default);
 	bot.command(stageName, (ctx) => ctx.scene.enter(stageName));
 });
 
-stage.register(require("./stages/welcomeTelegram"));
+(async () => {
+	stage.register((await import("./stages/welcomeTelegram.mjs")).default);
+})();
 
 bot.on("sticker", (ctx) => ctx.reply("👍🏽"));
 
-handlers.forEach((handler) => require(`./handlers/${handler}`)(bot));
+handlers.forEach(async (handler) =>
+	(await import(`./handlers/${handler}`)).default(bot)
+);
 
-commands.forEach((command) =>
-	bot.command(command, require(`./commands/${command}`))
+commands.forEach(async (command) =>
+	bot.command(command, await import(`./commands/${command}`))
 );
 
 bot.command("start", (ctx) => ctx.scene.enter("welcomeTelegram"));
@@ -65,7 +69,7 @@ else {
 
 app
 	.use(express.static(path.join(__dirname, "public")))
-	.use(function(req, res) {
+	.use(function (req, res) {
 		res.status(404);
 		res.sendFile(path.join(__dirname, "public/404.html"));
 	})

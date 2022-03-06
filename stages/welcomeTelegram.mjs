@@ -1,5 +1,6 @@
-const { BaseScene, Extra } = require("telegraf");
-const { delay } = require("../resources/helpers");
+import Telegraf from "telegraf";
+import { delay } from "../resources/helpers.js";
+const { BaseScene, Extra } = Telegraf;
 
 const sceneName = "welcomeTelegram";
 
@@ -400,4 +401,4 @@ scene.leave(async (ctx) => {
 	}
 });
 
-module.exports = scene;
+export default scene;

@@ -1,11 +1,11 @@
 import dotenv from "dotenv";
-import Telegraf from "telegraf";
+import { Telegraf, Markup, Scenes, session } from "telegraf";
 import express from "express";
 import path from "path";
 import renderFiles from "./renderFiles.mjs";
 import { __dirname } from "./resources/helpers.mjs";
 
-const { Extra, session, Stage } = Telegraf;
+const { Stage } = Scenes;
 
 dotenv.config();
 
@@ -21,15 +21,12 @@ const bot = new Telegraf(BOT_TOKEN);
 
 const stage = new Stage();
 stage.command("cancel", (ctx) => {
-	if (ctx.session.stage) {
+	if (ctx.session?.stage) {
 		ctx.session.stage = undefined;
 		return ctx.scene.leave();
 	}
 
-	return ctx.reply(
-		"No estaba haciendo nada...",
-		Extra.markup((m) => m.removeKeyboard())
-	);
+	return ctx.reply("No estaba haciendo nada...", Markup.removeKeyboard());
 });
 
 bot.use(session());

@@ -1,6 +1,6 @@
 import URL from "url-parse";
-import Telegraf from "telegraf";
-const { BaseScene } = Telegraf;
+import { Scenes } from "telegraf";
+const { BaseScene } = Scenes;
 
 const sceneName = "halivertlink";
 

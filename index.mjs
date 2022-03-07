@@ -1,9 +1,9 @@
 import dotenv from "dotenv";
-
 import Telegraf from "telegraf";
 import express from "express";
 import path from "path";
-import { fileURLToPath } from "url";
+import renderFiles from "./renderFiles.mjs";
+import { __dirname } from "./resources/helpers.mjs";
 
 const { Extra, session, Stage } = Telegraf;
 
@@ -70,7 +70,9 @@ else {
 	app.use(bot.webhookCallback(`/bot${BOT_TOKEN}`));
 }
 
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
+renderFiles({
+	bot: await bot.telegram.getMe(),
+});
 
 app
 	.use(express.static(path.join(__dirname, "public")))
@@ -78,4 +80,4 @@ app
 		res.status(404);
 		res.sendFile(path.join(__dirname, "public/404.html"));
 	})
-	.listen(PORT);
+	.listen(PORT, () => console.log(`Listening on ${PORT}`));

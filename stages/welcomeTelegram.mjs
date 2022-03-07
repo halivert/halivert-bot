@@ -1,6 +1,6 @@
-import Telegraf from "telegraf";
+import { Scenes, Markup } from "telegraf";
+const { BaseScene } = Scenes;
 import { delay } from "../resources/helpers.mjs";
-const { BaseScene, Extra } = Telegraf;
 
 const sceneName = "welcomeTelegram";
 
@@ -19,7 +19,7 @@ const steps = [
 			"CAACAgIAAxkBAAIBQl_4-E_VOxCPued721-sMPdzp0CxAALgCAACCLcZApPkOeu87BosHgQ"
 		);
 
-		await ctx.reply("Esto de aquí 👆🏽 es un *sticker*", Extra.markdown());
+		await ctx.replyWithMarkdown("Esto de aquí 👆🏽 es un *sticker*");
 
 		await typing(ctx);
 		await ctx.reply(
@@ -35,19 +35,17 @@ const steps = [
 	async (ctx) => {
 		ctx.reply(
 			"¿Estás en pc o móvil?",
-			Extra.markup((m) =>
-				m.inlineKeyboard([
-					m.callbackButton("PC", "pcNext"),
-					m.callbackButton("Móvil", "mobileNext"),
-				])
-			)
+			Markup.inlineKeyboard([
+				Markup.button.callback("PC", "pcNext"),
+				Markup.button.callback("Móvil", "mobileNext"),
+			])
 		);
 
 		ctx.session.step = 2;
 	},
 	// Paso 2
 	async (ctx) => {
-		await ctx.reply("De acuerdo, ahora *videomensajes*", Extra.markdown());
+		await ctx.replyWithMarkdown("De acuerdo, ahora *videomensajes*");
 		await ctx.reply(
 			"Ahí donde está el micrófono para las notas de voz toca una vez"
 		);
@@ -60,7 +58,7 @@ const steps = [
 	},
 	// Paso 3
 	async (ctx) => {
-		await ctx.reply("¿Sabías que puedes *editar mensajes*?", Extra.markdown());
+		await ctx.replyWithMarkdown("¿Sabías que puedes *editar mensajes*?");
 
 		ctx.reply("Mira, escribe algo...");
 
@@ -70,17 +68,15 @@ const steps = [
 	async (ctx) => {
 		if (ctx.from && ctx.from.username) {
 			await ctx.reply(
-				"Pero ya tienes nombre de usuario... creo que vas " +
-					"en el siguiente paso..."
+				"Pero ya tienes nombre de usuario... creo que vas en el siguiente paso..."
 			);
 
 			return steps[5](ctx);
 		}
 
-		await ctx.reply(
+		await ctx.replyWithMarkdown(
 			"Deberías utilizar un *nombre de usuario* para que las " +
-				"personas puedan identificarte sin necesidad de tener tu celular",
-			Extra.markdown()
+				"personas puedan identificarte sin necesidad de tener tu celular"
 		);
 
 		ctx.reply(
@@ -92,43 +88,36 @@ const steps = [
 	},
 	// Paso 5
 	async (ctx) => {
-		ctx.reply(
+		ctx.replyWithMarkdown(
 			"*Fijar mensajes*\n" +
 				`Esta función sirve para tener los mensajes más importantes hasta ` +
 				`arriba. Mira ${ctx.session.action} en un mensaje y selecciona ` +
-				"*fijar mensaje* y marca la casilla, para poder darme cuenta",
-			Extra.markdown()
+				"*fijar mensaje* y marca la casilla, para poder darme cuenta"
 		);
 
 		ctx.session.step = 6;
 	},
 	// Step 6
 	async (ctx) => {
-		await ctx.reply(
+		await ctx.replyWithMarkdown(
 			"También puedes *eliminar mensajes* " +
 				"Y no aparecerá un molesto: _Este mensaje ha sido eliminado_ " +
-				"¿Quién haría algo así de horrible?... 🙄",
-			Extra.markdown()
+				"¿Quién haría algo así de horrible?... 🙄"
 		);
 
 		await typing(ctx);
-		ctx.reply(
+		ctx.replyWithMarkdown(
 			`Inténtalo, ${ctx.session.action} en un mensaje y selecciona eliminar ` +
 				"mensaje _(Cuando estés en un chat con una persona real, tendrás que " +
 				"marcar la casilla para eliminar el mensaje también para esa persona)_",
-			Extra.markdown().markup((m) =>
-				m.inlineKeyboard([m.callbackButton("Listo", "onStep6")])
-			)
+			Markup.inlineKeyboard([Markup.button.callback("Listo", "onStep6")])
 		);
 
 		ctx.session.step = 7;
 	},
 	// Paso 7
 	async (ctx) => {
-		await ctx.reply(
-			"*Programar mensajes* y *Enviar en silencio*",
-			Extra.markdown()
-		);
+		await ctx.replyWithMarkdown("*Programar mensajes* y *Enviar en silencio*");
 
 		let action =
 			ctx.session.device === "mobile"
@@ -154,9 +143,8 @@ scene.enter(async (ctx) => {
 
 	await steps[0](ctx);
 
-	await ctx.reply(
-		"_O... Si ya has avanzado, escribe /step y el paso en el que vas e.g._",
-		Extra.markdown()
+	await ctx.replyWithMarkdown(
+		"_O... Si ya has avanzado, escribe /step y el paso en el que vas e.g._"
 	);
 
 	ctx.reply("/step 4");
@@ -315,9 +303,8 @@ scene.command("step", async (ctx) => {
 		let secondNumber = parseInt(second, 10);
 
 		if (isNaN(secondNumber)) {
-			return ctx.reply(
-				`¿Te parece que \`${second || ""}\` es un número? 😠`,
-				Extra.markdown()
+			return ctx.replyWithMarkdown(
+				`¿Te parece que \`${second || ""}\` es un número? 😠`
 			);
 		}
 
@@ -338,12 +325,10 @@ scene.command("step", async (ctx) => {
 		if (secondNumber > 1) {
 			return await ctx.reply(
 				"Por favor recuerdame, ¿estás en pc o móvil?",
-				Extra.markup((m) =>
-					m.inlineKeyboard([
-						m.callbackButton("PC", "pcNext"),
-						m.callbackButton("Móvil", "mobileNext"),
-					])
-				)
+				Markup.inlineKeyboard([
+					Markup.button.callback("PC", "pcNext"),
+					Markup.button.callback("Móvil", "mobileNext"),
+				])
 			);
 		}
 
@@ -358,10 +343,9 @@ scene.on("message", async (ctx) => {
 		);
 
 		await typing(ctx);
-		return ctx.reply(
+		return ctx.replyWithMarkdown(
 			"Aparecerá un menú y una de las opciones es *editar*\nAhora edita el " +
-				"mensaje",
-			Extra.markdown()
+				"mensaje"
 		);
 	}
 
